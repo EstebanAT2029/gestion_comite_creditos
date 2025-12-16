@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# No tocar directamente /app, /vendor, /config, etc. (por si no existe el .htaccess interno)
+RewriteRule ^(app|vendor|config|core|logs)/ - [F,L]
+
+# Si el archivo existe (imágenes, css, js) lo sirve tal cual
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule . - [L]
+
+# Si la carpeta existe, la deja pasar
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule . - [L]
+
+# Todo lo demás → a public/index.php
+RewriteRule ^ public/index.php [L]

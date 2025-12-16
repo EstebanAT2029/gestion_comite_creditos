@@ -1,0 +1,20 @@
+{
+    "name": "esteban/siscomite",
+    "description": "Sisetma de Comite de Creditos",
+    "autoload": {
+        "psr-4": {
+            "Esteban\\Siscomite\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Esteban",
+            "email": "esteban2029@gmail.com"
+        }
+    ],
+    "require": {
+        "phpoffice/phpword": "^1.4",
+        "dompdf/dompdf": "^3.1",
+        "phpoffice/phpspreadsheet": "^5.3"
+    }
+}

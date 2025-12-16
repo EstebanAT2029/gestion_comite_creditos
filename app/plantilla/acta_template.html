@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+
+<style>
+    @page { size: A4; margin: 2.3cm; }
+
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 12pt;
+        line-height: 1.35;
+    }
+
+    .titulo-principal {
+        text-align: center;
+        font-size: 12pt;
+        font-weight: bold;
+        margin-top: 5px;
+        text-decoration: underline;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+        margin-bottom: 18px;
+    }
+
+    th {
+        background: #d9e8c4;
+        padding: 4px;
+        border: 1px solid #000;
+        font-size: 8pt;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    td {
+        border: 1px solid #000;
+        padding: 4px;
+        font-size: 8pt;
+        vertical-align: top;
+    }
+
+    .subtitulo {
+        font-size: 8pt;
+        font-weight: bold;
+        margin-top: 25px;
+        margin-bottom: 5px;
+    }
+
+    .firmas-tabla td, .firmas-tabla th {
+        border: 0 !important;
+        padding: 4px;
+        font-size: 10pt;
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- TITULO -->
+<div class="titulo-principal">
+    Acta de Comité de Créditos N° ${correlativo}/2025 – Agencia ${agencia}
+</div>
+
+<!-- PARRAFO INICIAL -->
+<p style="text-align: justify;">
+    Siendo las <b>${hora}</b> horas del día <b>${fecha_larga}</b>, se inició el comité de créditos 
+    en la Agencia <b>${agencia}</b>, con la presencia de los funcionarios firmantes al final del presente documento.
+</p>
+
+<p style="text-align: justify;">
+    En esta reunión se expusieron <b>${numero_casos}</b> casos de propuestas de créditos, donde al finalizar el comité 
+    se pudo concluir lo señalado en el cuadro presentado a continuación; rechazar el crédito o trasladar al 
+    aprobador correspondiente mediante el sistema IBS, de acuerdo a la resolución obtenida:
+</p>
+
+<!-- TABLA CASOS -->
+<table class="tabla-casos">
+    <thead>
+        <tr>
+            <th class="col-cadena">N° CADENA</th>
+            <th class="col-cliente">CLIENTE</th>
+            <th class="col-tipo">TIPO</th>
+            <th class="col-monto">MONTO</th>
+            <th class="col-oficial">OFICIAL PROPONENTE</th>
+            <th class="col-tipocredito">TIPO CRÉDITO</th>
+            <th class="col-resolucion">RESOLUCIÓN</th>
+            <th class="col-observacion">OBSERVACIONES</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        ${tabla_casos}
+    </tbody>
+</table>
+
+<!-- BLOQUE VINCULADOS -->
+${bloque_vinculados}
+
+<!-- FINAL -->
+<p style="margin-top:25px;">
+    Concluida la reunión firman la presente acta los siguientes:
+</p>
+
+<p><b>Comité de Créditos: ${tipo_comite}</b></p>
+</table>
+<!-- COMITÉ -->
+<h3 class="subtitulo">Participantes</h3>
+
+<ul style="font-size: 12pt; margin-left: 15px;">
+
+    <li>
+        <b>Oficial de Riesgos</b> – 
+        ${oficial_riesgos} – 
+        <i>${modalidad_riesgo}</i>
+    </li>
+
+    <li>
+        <b>Jefe de Agencia</b> – 
+        ${jefe_agencia} – 
+        <i>${modalidad_jefe}</i>
+    </li>
+
+    <li>
+        <b>Oficial de Negocios Participante 01</b> – 
+        ${oficial_participante1} – 
+        <i>${modalidad_participante1}</i>
+    </li>
+
+    <li>
+        <b>Oficial de Negocios Participante 02</b> – 
+        ${oficial_participante2} – 
+        <i>${modalidad_participante2}</i>
+    </li>
+
+
+</ul>
+
+
+</body>
+</html>

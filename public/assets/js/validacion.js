@@ -28,8 +28,8 @@ document.addEventListener("input", function (e) {
     if (
         el.classList.contains("nombres") ||
         el.classList.contains("tipo_cli") ||
-        el.classList.contains("tipo_credito") ||
-        el.classList.contains("comentarios")
+        el.classList.contains("tipo_credito") 
+        //||el.classList.contains("comentarios")
     ) {
         let p = el.selectionStart;
         el.value = el.value.toUpperCase();

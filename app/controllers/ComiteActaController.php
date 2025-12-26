@@ -76,6 +76,10 @@ class ComiteActaController
     {
         try {
 
+            // 🔒 LIMPIAR TODO BUFFER PREVIO
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
             ob_start();
 
             $idComite  = $_GET["id"] ?? null;
@@ -85,33 +89,51 @@ class ComiteActaController
                 throw new Exception("Faltan parámetros para generar el PDF.");
             }
 
+            // HTML del acta
             $html = $this->buildActaHtml($idComite, $idDetalle);
 
+            // Limpieza CRÍTICA
             $html = preg_replace('/<meta[^>]+>/i', '', $html);
             $html = preg_replace('/<link[^>]+>/i', '', $html);
-            $html = str_replace('<br>', '<br/>', $html);
+            $html = trim($html);
 
             $options = new Options();
-            $options->set("isHtml5ParserEnabled", true);
-            $options->set("isRemoteEnabled", true);
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('isRemoteEnabled', true);
+            $options->set('defaultFont', 'Helvetica');
 
             $dompdf = new Dompdf($options);
-            $dompdf->loadHtml(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
-            $dompdf->setPaper("A4", "portrait");
+            $dompdf->loadHtml($html, 'UTF-8');
+            $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
 
+            $canvas = $dompdf->getCanvas();
+            $font = $dompdf->getFontMetrics()->getFont("Helvetica", "normal");
+            $canvas->page_text(520, 820, "Página {PAGE_NUM} / {PAGE_COUNT}", $font, 9);
+
+
+            // 🔥 LIMPIAR ANTES DE STREAM
             ob_end_clean();
 
-            $fileName = "Acta_Comite_{$idComite}.pdf";
-            $dompdf->stream($fileName, ["Attachment" => true]);
+            $dompdf->stream(
+                "Acta_Comite_{$idComite}.pdf",
+                ["Attachment" => true]
+            );
             exit;
 
-        } catch (Exception $e) {
-            ob_end_clean();
-            echo "<b>Error generando PDF:</b><br>";
-            echo $e->getMessage();
+        } catch (Throwable $e) {
+
+            // 🚫 NUNCA HTML AQUÍ
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+
+            header("Content-Type: text/plain; charset=UTF-8");
+            echo "Error generando PDF:\n" . $e->getMessage();
+            exit;
         }
     }
+
 
     /* ============================================================
        GENERAR HTML COMPLETO DEL ACTA
@@ -147,7 +169,7 @@ class ComiteActaController
         $fechaLarga = $this->convertirFechaLarga($comite["fecha"]);
 
         /* ======================
-           TABLA DE CASOS
+        TABLA DE CASOS
         ====================== */
         $tablaCasos = "";
 
@@ -156,6 +178,7 @@ class ComiteActaController
             $ofP = $this->oficialModel->getById($detalle["id_oficial_proponente"]);
             $nombreProponenteRow = trim(($ofP["apellidos"] ?? "") . " " . ($ofP["nombres"] ?? ""));
 
+            // FILA PRINCIPAL DEL CASO
             $tablaCasos .= '
             <tr>
                 <td class="col-cadena">'.htmlspecialchars($detalle['cadena']).'</td>
@@ -170,9 +193,21 @@ class ComiteActaController
 
                 <td class="col-tipocredito">'.htmlspecialchars($detalle['tipo_credito']).'</td>
                 <td class="col-resolucion" style="text-align:center;">'.htmlspecialchars($detalle['decision_desc']).'</td>
-                <td class="col-observacion">'.htmlspecialchars($detalle['observaciones']).'</td>
             </tr>';
+
+            // FILA DE OBSERVACIONES (DEBAJO DEL CASO)
+            if (!empty(trim($detalle['observaciones']))) {
+                $tablaCasos .= '
+                <tr class="fila-observaciones">
+                    <td colspan="7">
+                        <b>OBSERVACIONES:</b><br>
+                        '.nl2br(htmlspecialchars($detalle['observaciones'])).'
+                    </td>
+                </tr>';
+            }
         }
+
+
 
         /* =====================================================
            BLOQUES DE VINCULADOS (UNO POR CADA CASO)

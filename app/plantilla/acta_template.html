@@ -25,6 +25,11 @@
         border-collapse: collapse;
         margin-top: 12px;
         margin-bottom: 18px;
+        page-break-inside: auto;
+    }
+
+    tr {
+        page-break-inside: avoid;
     }
 
     th {
@@ -43,30 +48,26 @@
         vertical-align: top;
     }
 
+    .fila-observaciones td {
+        background: #eef5e6;
+        font-size: 8pt;
+    }
+
     .subtitulo {
         font-size: 8pt;
         font-weight: bold;
         margin-top: 25px;
         margin-bottom: 5px;
     }
-
-    .firmas-tabla td, .firmas-tabla th {
-        border: 0 !important;
-        padding: 4px;
-        font-size: 10pt;
-    }
-
 </style>
 </head>
 
 <body>
 
-<!-- TITULO -->
 <div class="titulo-principal">
     Acta de Comité de Créditos N° ${correlativo}/2025 – Agencia ${agencia}
 </div>
 
-<!-- PARRAFO INICIAL -->
 <p style="text-align: justify;">
     Siendo las <b>${hora}</b> horas del día <b>${fecha_larga}</b>, se inició el comité de créditos 
     en la Agencia <b>${agencia}</b>, con la presencia de los funcionarios firmantes al final del presente documento.
@@ -78,68 +79,39 @@
     aprobador correspondiente mediante el sistema IBS, de acuerdo a la resolución obtenida:
 </p>
 
-<!-- TABLA CASOS -->
 <table class="tabla-casos">
     <thead>
         <tr>
-            <th class="col-cadena">N° CADENA</th>
-            <th class="col-cliente">CLIENTE</th>
-            <th class="col-tipo">TIPO</th>
-            <th class="col-monto">MONTO</th>
-            <th class="col-oficial">OFICIAL PROPONENTE</th>
-            <th class="col-tipocredito">TIPO CRÉDITO</th>
-            <th class="col-resolucion">RESOLUCIÓN</th>
-            <th class="col-observacion">OBSERVACIONES</th>
+            <th>N° CADENA</th>
+            <th>CLIENTE</th>
+            <th>TIPO</th>
+            <th>MONTO</th>
+            <th>OFICIAL PROPONENTE</th>
+            <th>TIPO CRÉDITO</th>
+            <th>RESOLUCIÓN</th>
         </tr>
     </thead>
-
     <tbody>
         ${tabla_casos}
     </tbody>
 </table>
 
-<!-- BLOQUE VINCULADOS -->
 ${bloque_vinculados}
 
-<!-- FINAL -->
 <p style="margin-top:25px;">
     Concluida la reunión firman la presente acta los siguientes:
 </p>
 
 <p><b>Comité de Créditos: ${tipo_comite}</b></p>
-</table>
-<!-- COMITÉ -->
+
 <h3 class="subtitulo">Participantes</h3>
 
-<ul style="font-size: 12pt; margin-left: 15px;">
-
-    <li>
-        <b>Oficial de Riesgos</b> – 
-        ${oficial_riesgos} – 
-        <i>${modalidad_riesgo}</i>
-    </li>
-
-    <li>
-        <b>Jefe de Agencia</b> – 
-        ${jefe_agencia} – 
-        <i>${modalidad_jefe}</i>
-    </li>
-
-    <li>
-        <b>Oficial de Negocios Participante 01</b> – 
-        ${oficial_participante1} – 
-        <i>${modalidad_participante1}</i>
-    </li>
-
-    <li>
-        <b>Oficial de Negocios Participante 02</b> – 
-        ${oficial_participante2} – 
-        <i>${modalidad_participante2}</i>
-    </li>
-
-
+<ul>
+    <li><b>Oficial de Riesgos</b> – ${oficial_riesgos} – <i>${modalidad_riesgo}</i></li>
+    <li><b>Jefe de Agencia</b> – ${jefe_agencia} – <i>${modalidad_jefe}</i></li>
+    <li><b>Oficial de Negocios Participante 01</b> – ${oficial_participante1} – <i>${modalidad_participante1}</i></li>
+    <li><b>Oficial de Negocios Participante 02</b> – ${oficial_participante2} – <i>${modalidad_participante2}</i></li>
 </ul>
-
 
 </body>
 </html>

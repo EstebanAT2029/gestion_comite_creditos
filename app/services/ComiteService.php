@@ -24,7 +24,7 @@ class ComiteService
         $casos   = $data["casos"];
 
         $usuarioId = $_SESSION["user"]["id"];
-        $idZona    = $_SESSION["user"]["id_zona"] ?? null;  // zona del usuario logueado
+        $idZona    = $_SESSION["user"]["id_zona"] ?? null;
 
         $numeroCasos = count($casos);
 
@@ -36,7 +36,7 @@ class ComiteService
             "hora"         => $hora,
             "numero_casos" => $numeroCasos,
             "id_usuario"   => $usuarioId,
-            "id_zona"      => $idZona          // 🔥 lo mandamos SIEMPRE
+            "id_zona"      => $idZona
         ];
 
         $idComite = $this->model->insertarComite($datosComite);
@@ -48,22 +48,27 @@ class ComiteService
         $primerDetalle = null;
 
         /* =========================================================
-           2. INSERTAR DETALLES (CASOS)
+           2. GENERAR CORRELATIVO (UNA SOLA VEZ POR COMITÉ)
+        ========================================================== */
+        $anioActual = date("Y");
+
+        $correlativo = $this->detalleModel->getCorrelativoAgenciaAnio(
+            $agencia,
+            $anioActual
+        );
+        $correlativo = str_pad($correlativo, 3, "0", STR_PAD_LEFT);
+
+        /* =========================================================
+           3. INSERTAR DETALLES (CASOS)
         ========================================================== */
         foreach ($casos as $c) {
-
-            $anioActual = date("Y");
-
-            // Generar correlativo por agencia/año
-            $correlativo = $this->detalleModel->getCorrelativoAgenciaAnio($agencia, $anioActual);
-            $correlativo = str_pad($correlativo, 3, "0", STR_PAD_LEFT);
 
             $idDecision = $this->mapDecision($c["decision"]);
 
             $idDetalle = $this->detalleModel->insertarDetalle([
                 "id_comite"             => $idComite,
                 "id_agencia"            => $agencia,
-                "correlativo"           => $correlativo,
+                "correlativo"           => $correlativo, // ✅ MISMO PARA TODOS
                 "dni"                   => $c["dni"],
                 "cadena"                => $c["cadena"],
                 "nombres"               => $c["nombres"],
@@ -87,7 +92,7 @@ class ComiteService
             }
 
             /* =========================================================
-               3. Registrar vinculados
+               4. REGISTRAR VINCULADOS POR CASO
             ========================================================== */
             if (!empty($c["vinculados"])) {
                 foreach ($c["vinculados"] as $v) {
@@ -108,9 +113,9 @@ class ComiteService
     private function mapDecision($txt)
     {
         $map = [
-            "Aprobado"   => 1,
-            "Observado"  => 2,
-            "Denegado"   => 3
+            "Aprobado"  => 1,
+            "Observado" => 2,
+            "Denegado"  => 3
         ];
         return $map[$txt] ?? 1;
     }

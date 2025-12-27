@@ -19,17 +19,37 @@ document.addEventListener("input", function (e) {
 
     // MONTO
     if (el.classList.contains("monto")) {
-        el.value = el.value.replace(/[^0-9.]/g, "");
-        let v = parseFloat(el.value);
-        if (!isNaN(v) && v > 1) el.classList.remove("is-invalid");
+
+        // Guardar posición del cursor
+        const start = el.selectionStart;
+
+        // Permitir números, coma y punto
+        let valor = el.value.replace(/[^0-9.,]/g, "");
+
+        // Evitar más de un punto decimal
+        const partes = valor.split(".");
+        if (partes.length > 2) {
+            valor = partes.shift() + "." + partes.join("");
+        }
+
+        el.value = valor;
+
+        // Restaurar cursor
+        el.setSelectionRange(start, start);
+
+        // Validación numérica REAL (quitando comas)
+        const numero = parseFloat(valor.replace(/,/g, ""));
+        if (!isNaN(numero) && numero > 0) {
+            el.classList.remove("is-invalid");
+        }
     }
+
 
     // TEXTOS MAYÚSCULA
     if (
         el.classList.contains("nombres") ||
         el.classList.contains("tipo_cli") ||
         el.classList.contains("tipo_credito") 
-        //||el.classList.contains("comentarios")
     ) {
         let p = el.selectionStart;
         el.value = el.value.toUpperCase();
@@ -96,7 +116,7 @@ function validarCamposObligatorios() {
     });
 
     if (!ok) {
-        cusTomAlert("⚠ POR FAVOR COMPLETE CORRECTAMENTE TODOS LOS CAMPOS ANTES DE FINALIZAR.");
+        alert("⚠ POR FAVOR COMPLETE CORRECTAMENTE TODOS LOS CAMPOS ANTES DE FINALIZAR.");
         primerError?.focus();
     }
 
@@ -113,7 +133,7 @@ function validarObservacionesYConfirmar() {
     let hay = [...comentarios].some(c => c.value.trim() !== "");
 
     if (!hay) {
-        let continuar = customConfirm("⚠ No ingresó comentarios. ¿Desea continuar sin observaciones?");
+        let continuar = confirm("⚠ No ingresó comentarios. ¿Desea continuar sin observaciones?");
         if (!continuar) {
             comentarios[0].classList.add("is-invalid");
             comentarios[0].focus();

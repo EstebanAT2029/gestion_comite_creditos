@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ============================================================= */
     btnEmpezar.addEventListener("click", () => {
 
-        if (!selAgencia.value || !selOf1.value || !selJefe.value) {
+        if (!selAgencia.value || !selOf1.value || !selOf2.value || !selJefe.value) {
             customAlert("⚠ Complete todos los campos del encabezado.", "Validación");
             return;
         }
@@ -243,7 +243,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 dni:          caso.querySelector(".dni").value,
                 cadena:       caso.querySelector(".cadena").value,
                 nombres:      caso.querySelector(".nombres").value,
-                monto:        parseFloat(caso.querySelector(".monto").value || 0),
+                monto: parseFloat(
+                    caso.querySelector(".monto").value.replace(/,/g, "")
+                ) || 0,
                 tipo_cli:     caso.querySelector(".tipo_cli").value,
                 tipo_credito: caso.querySelector(".tipo_credito").value,
                 oficial_prop: caso.querySelector(".oficial_prop").value,

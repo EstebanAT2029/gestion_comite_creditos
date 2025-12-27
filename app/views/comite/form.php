@@ -139,7 +139,7 @@
 
             <div class="col-md-3">
                 <label class="form-label">Monto Propuesto</label>
-                <input type="number" class="form-control monto" step="0.01">
+                <input type="text" class="form-control monto" step="0.01">
             </div>
 
             <div class="col-md-3">
@@ -262,7 +262,7 @@
                                       <option value="No">No</option>
                                       <option value="Si">Si</option>
                                   </select>
-                                  <input type="text" class="form-control rv_act_txt" placeholder="Descripción">
+                                  <input type="text" class="form-control rv_act_txt" placeholder="Ingrese Actividad">
                               </div>
                           </div>
 

@@ -87,7 +87,7 @@ function cambiarEstado(id, estadoActual) {
 
     const nuevoEstado = estadoActual === "Activo" ? "Inactivo" : "Activo";
 
-    if (customConfirm(`¿Desea cambiar el estado a: ${nuevoEstado}?`)) return;
+    if (!confirm(`¿Desea cambiar el estado a: ${nuevoEstado}?`)) return;
 
     fetch("index.php?url=oficiales/estado", {
         method: "POST",

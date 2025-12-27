@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
             };
 
             if (!data.apellidos || !data.nombres || !data.id_agencia) {
-                alert("⚠ Completa todos los campos obligatorios.");
+                customAlert("⚠ Completa todos los campos obligatorios.");
                 return;
             }
 
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(r => r.json())
                 .then(resp => {
                     if (!resp.success) {
-                        alert("❌ Error al registrar.");
+                        customAlert("❌ Error al registrar.");
                         return;
                     }
 
@@ -87,7 +87,7 @@ function cambiarEstado(id, estadoActual) {
 
     const nuevoEstado = estadoActual === "Activo" ? "Inactivo" : "Activo";
 
-    if (!confirm(`¿Desea cambiar el estado a: ${nuevoEstado}?`)) return;
+    if (customConfirm(`¿Desea cambiar el estado a: ${nuevoEstado}?`)) return;
 
     fetch("index.php?url=oficiales/estado", {
         method: "POST",
@@ -97,6 +97,6 @@ function cambiarEstado(id, estadoActual) {
         .then(r => r.json())
         .then(resp => {
             if (resp.success) location.reload();
-            else alert("Error al actualizar estado");
+            else customAlert("Error al actualizar estado");
         });
 }

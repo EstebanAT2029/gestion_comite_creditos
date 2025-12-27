@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
             let resp = JSON.parse(t);
 
             if (!resp.success) {
-                alert("❌ Error al guardar comité: " + resp.error);
+                customAlert("❌ Error al guardar comité: " + resp.error);
                 return;
             }
 
@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .catch(err => {
             console.error("Error conectando:", err);
-            alert("❌ Error de conexión.");
+            customAlert("❌ Error de conexión.");
         });
     };
 
@@ -275,60 +275,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const mm = String(ahora.getMinutes()).padStart(2, "0");
 
         inputHora.value = `${hh}:${mm}`;
-    }
-    //css para los alerts
-    function customAlert(mensaje, titulo = "Mensaje") {
-        return new Promise(resolve => {
-            const overlay = document.createElement("div");
-            overlay.className = "alert-overlay";
-
-            overlay.innerHTML = `
-                <div class="alert-box">
-                    <div class="alert-title">${titulo}</div>
-                    <div class="alert-message">${mensaje}</div>
-                    <div class="alert-actions">
-                        <button class="alert-btn alert-ok">Aceptar</button>
-                    </div>
-                </div>
-            `;
-
-            overlay.querySelector(".alert-ok").onclick = () => {
-                overlay.remove();
-                resolve(true);
-            };
-
-            document.body.appendChild(overlay);
-        });
-    }
-
-    function customConfirm(mensaje, titulo = "Confirmación") {
-        return new Promise(resolve => {
-            const overlay = document.createElement("div");
-            overlay.className = "alert-overlay";
-
-            overlay.innerHTML = `
-                <div class="alert-box">
-                    <div class="alert-title">${titulo}</div>
-                    <div class="alert-message">${mensaje}</div>
-                    <div class="alert-actions">
-                        <button class="alert-btn alert-cancel">Cancelar</button>
-                        <button class="alert-btn alert-ok">Aceptar</button>
-                    </div>
-                </div>
-            `;
-
-            overlay.querySelector(".alert-ok").onclick = () => {
-                overlay.remove();
-                resolve(true);
-            };
-
-            overlay.querySelector(".alert-cancel").onclick = () => {
-                overlay.remove();
-                resolve(false);
-            };
-
-            document.body.appendChild(overlay);
-        });
     }
 
 });

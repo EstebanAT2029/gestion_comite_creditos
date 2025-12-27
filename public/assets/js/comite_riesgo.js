@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (duplicado) {
-            alert("⚠ El DNI " + duplicado + " está duplicado en la lista de vinculados.");
+            customAlert("⚠ El DNI " + duplicado + " está duplicado en la lista de vinculados.");
             contVinc.querySelectorAll(".fila-vinculado").forEach(f => {
                 if (f.querySelector(".rv_dni").value.trim() === duplicado) {
                     f.querySelector(".rv_dni").classList.add("is-invalid");
@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (!ok) {
-            alert("⚠ COMPLETE TODOS LOS CAMPOS DEL FORMULARIO DE RIESGO VINCULADO.");
+            customAlert("⚠ COMPLETE TODOS LOS CAMPOS DEL FORMULARIO DE RIESGO VINCULADO.");
             firstError?.focus();
         }
 

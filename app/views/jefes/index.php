@@ -118,7 +118,7 @@
         </div>
     </div>
 </div>
-
+<script src="assets/js/global-alerts.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/jefes.js?v=<?= time()?>"></script>
 
 <?php require __DIR__ . "/../layout/footer.php"; ?>

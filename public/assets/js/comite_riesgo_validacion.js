@@ -124,7 +124,7 @@ function validarVinculados() {
     });
 
     if (!ok) {
-        alert("⚠ COMPLETE TODOS LOS CAMPOS OBLIGATORIOS DEL FORMULARIO DE RIESGO VINCULADO.");
+        customAlert("⚠ COMPLETE TODOS LOS CAMPOS OBLIGATORIOS DEL FORMULARIO DE RIESGO VINCULADO.");
         primerError?.focus();
     }
     return ok;

@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
 
             if (!data.success) {
-                alert("❌ Error guardando modalidad de comité");
+                customAlert("❌ Error guardando modalidad de comité");
                 console.error(data.error);
                 return;
             }

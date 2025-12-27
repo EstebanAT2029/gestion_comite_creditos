@@ -63,6 +63,6 @@ function eliminarJefe(id) {
     .then(r => r.json())
     .then(resp => {
         if (resp.success) location.reload();
-        else alert("❌ Error eliminando el registro");
+        else customAlert("❌ Error eliminando el registro");
     });
 }

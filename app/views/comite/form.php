@@ -397,6 +397,7 @@
 <!-- ============================= -->
 <!-- SCRIPTS DEL FORMULARIO        -->
 <!-- ============================= -->
+<script src="assets/js/global-alerts.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/validacion.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/comite_form.js?v=<?php echo time(); ?>"></script>
 <script src="assets/js/comite_riesgo_validacion.js?v=<?php echo time(); ?>"></script>

@@ -3,19 +3,22 @@
 ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-    actualizarHoraSistema();
-
-    // Actualizar cada 30 segundos
-    setInterval(actualizarHoraSistema, 30000);
-    console.log("✔ comite_form.js cargado");
-
     // Elementos principales
+        // ✅ Al cargar el formulario → hora del sistema
+    actualizarHoraSistema(true);
+
     const selAgencia   = document.getElementById("agencia");
     const selOf1       = document.getElementById("oficial1");
     const selOf2       = document.getElementById("oficial2");
     const selJefe      = document.getElementById("jefe_ag");
 
-    const btnEmpezar   = document.getElementById("btnEmpezar");
+    const btnEmpezar = document.getElementById("btnEmpezar");
+        if (btnEmpezar) {
+            btnEmpezar.addEventListener("click", () => {
+                // 🔒 No forzar, solo asegurar que exista
+                actualizarHoraSistema(false);
+            });
+        }
     const btnAñadir    = document.getElementById("btnAñadir");
     const btnFinalizar = document.getElementById("btnFinalizar");
 
@@ -101,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ============================================================= */
     function validarParticipantes() {
         if (selOf1.value && selOf1.value === selOf2.value) {
-            alert("⚠ No puede repetir el mismo oficial como participante 1 y 2.");
+            customAlert("⚠ No puede repetir el mismo oficial como participante 1 y 2.");
             selOf2.value = "";
         }
         actualizarComboProponentes();
@@ -110,16 +113,37 @@ document.addEventListener("DOMContentLoaded", () => {
     selOf1.addEventListener("change", validarParticipantes);
     selOf2.addEventListener("change", validarParticipantes);
 
-    /* ============================================================
-       Filtrar oficiales proponentes en los casos
-    ============================================================= */
     function actualizarComboProponentes() {
-        const usados = new Set([selOf1.value, selOf2.value]);
 
-        const filtrados = oficialesGlobal.filter(o => !usados.has(String(o.id)));
+        const casos = document.querySelectorAll(".caso-item");
 
-        document.querySelectorAll(".oficial_prop").forEach(select => {
-            llenarCombo(select, filtrados, "id", "nombre");
+        // Caso único → filtrar
+        if (casos.length === 1) {
+
+            const usados = new Set([selOf1.value, selOf2.value]);
+
+            const filtrados = oficialesGlobal.filter(o => !usados.has(String(o.id)));
+
+            const select = casos[0].querySelector(".oficial_prop");
+
+            // ⚠️ SOLO si aún no tiene valor
+            if (!select.value) {
+                llenarCombo(select, filtrados, "id", "nombre");
+            }
+
+            return;
+        }
+
+        // Dos o más casos → liberar SIN resetear
+        casos.forEach(caso => {
+
+            const select = caso.querySelector(".oficial_prop");
+
+            // 🔒 Si ya eligieron algo → NO TOCAR
+            if (select.value) return;
+
+            // 🔓 Solo llenar si está vacío
+            llenarCombo(select, oficialesGlobal, "id", "nombre");
         });
     }
 
@@ -129,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnEmpezar.addEventListener("click", () => {
 
         if (!selAgencia.value || !selOf1.value || !selJefe.value) {
-            alert("⚠ Complete todos los campos del encabezado.");
+            customAlert("⚠ Complete todos los campos del encabezado.", "Validación");
             return;
         }
 
@@ -146,8 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* ============================================================
-       4. Añadir caso
-    ============================================================= */
+    4. Añadir caso
+    ============================================================ */
     btnAñadir.addEventListener("click", () => {
 
         numCaso++;
@@ -157,15 +181,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         divCaso.querySelector(".titulo-caso").textContent = `Caso ${numCaso}`;
 
-        const selProp = divCaso.querySelector(".oficial_prop");
-
-        const usados = new Set([selOf1.value, selOf2.value]);
-        const filtrados = oficialesGlobal.filter(o => !usados.has(String(o.id)));
-
-        llenarCombo(selProp, filtrados, "id", "nombre");
-
         contCasos.appendChild(clone);
+
+        // 🔥 MUY IMPORTANTE:
+        // recalcula los oficiales proponentes según
+        // la cantidad total de casos existentes
+        actualizarComboProponentes();
     });
+
 
     /* ============================================================
        5. Finalizar Comité — LLAMADO DESDE validacion.js
@@ -240,15 +263,72 @@ document.addEventListener("DOMContentLoaded", () => {
             casos:        casos
         };
     }
-    function actualizarHoraSistema() {
+    function actualizarHoraSistema(force = false) {
         const inputHora = document.getElementById("hora");
         if (!inputHora) return;
+
+        // ❗ Solo setear si está vacío o si se fuerza
+        if (inputHora.value && !force) return;
 
         const ahora = new Date();
         const hh = String(ahora.getHours()).padStart(2, "0");
         const mm = String(ahora.getMinutes()).padStart(2, "0");
 
         inputHora.value = `${hh}:${mm}`;
+    }
+    //css para los alerts
+    function customAlert(mensaje, titulo = "Mensaje") {
+        return new Promise(resolve => {
+            const overlay = document.createElement("div");
+            overlay.className = "alert-overlay";
+
+            overlay.innerHTML = `
+                <div class="alert-box">
+                    <div class="alert-title">${titulo}</div>
+                    <div class="alert-message">${mensaje}</div>
+                    <div class="alert-actions">
+                        <button class="alert-btn alert-ok">Aceptar</button>
+                    </div>
+                </div>
+            `;
+
+            overlay.querySelector(".alert-ok").onclick = () => {
+                overlay.remove();
+                resolve(true);
+            };
+
+            document.body.appendChild(overlay);
+        });
+    }
+
+    function customConfirm(mensaje, titulo = "Confirmación") {
+        return new Promise(resolve => {
+            const overlay = document.createElement("div");
+            overlay.className = "alert-overlay";
+
+            overlay.innerHTML = `
+                <div class="alert-box">
+                    <div class="alert-title">${titulo}</div>
+                    <div class="alert-message">${mensaje}</div>
+                    <div class="alert-actions">
+                        <button class="alert-btn alert-cancel">Cancelar</button>
+                        <button class="alert-btn alert-ok">Aceptar</button>
+                    </div>
+                </div>
+            `;
+
+            overlay.querySelector(".alert-ok").onclick = () => {
+                overlay.remove();
+                resolve(true);
+            };
+
+            overlay.querySelector(".alert-cancel").onclick = () => {
+                overlay.remove();
+                resolve(false);
+            };
+
+            document.body.appendChild(overlay);
+        });
     }
 
 });

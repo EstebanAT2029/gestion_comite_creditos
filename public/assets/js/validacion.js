@@ -96,7 +96,7 @@ function validarCamposObligatorios() {
     });
 
     if (!ok) {
-        alert("⚠ POR FAVOR COMPLETE CORRECTAMENTE TODOS LOS CAMPOS ANTES DE FINALIZAR.");
+        cusTomAlert("⚠ POR FAVOR COMPLETE CORRECTAMENTE TODOS LOS CAMPOS ANTES DE FINALIZAR.");
         primerError?.focus();
     }
 
@@ -113,7 +113,7 @@ function validarObservacionesYConfirmar() {
     let hay = [...comentarios].some(c => c.value.trim() !== "");
 
     if (!hay) {
-        let continuar = confirm("⚠ No ingresó comentarios. ¿Desea continuar sin observaciones?");
+        let continuar = customConfirm("⚠ No ingresó comentarios. ¿Desea continuar sin observaciones?");
         if (!continuar) {
             comentarios[0].classList.add("is-invalid");
             comentarios[0].focus();
